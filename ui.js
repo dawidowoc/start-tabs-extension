@@ -12,19 +12,32 @@ load().then((loadedTabs) => {
   refreshTabsList();
 });
 
-function clearTabsList() {
-  document.getElementById("urlList").textContent = "";
-}
-
 const refreshTabsList = () => {
   clearTabsList();
   tabs.forEach((tab) => addTabToList(tab));
 };
 
+const clearTabsList = () =>
+  (document.getElementById("tabsTable").textContent = "");
+
 const addTabToList = (tab) => {
-  const newLi = document.createElement("li");
-  newLi.appendChild(document.createTextNode(tab));
-  document.getElementById("urlList").appendChild(newLi);
+  const newTr = document.createElement("tr");
+  const urlTd = document.createElement("td");
+  const pinnedTd = document.createElement("td");
+  const pinnedCheckbox = document.createElement("input");
+  pinnedCheckbox.setAttribute("type", "checkbox");
+  pinnedCheckbox.setAttribute("disabled", "true");
+
+  if (tab.pinned) {
+    pinnedCheckbox.setAttribute("checked", "true");
+  }
+
+  urlTd.appendChild(document.createTextNode(tab.url));
+  pinnedTd.appendChild(pinnedCheckbox);
+
+  newTr.appendChild(urlTd);
+  newTr.appendChild(pinnedTd);
+  document.getElementById("tabsTable").appendChild(newTr);
 };
 
 document.getElementById("openTabs").onclick = function () {
@@ -40,7 +53,10 @@ document.getElementById("clearStorage").onclick = function () {
 document.getElementById("addTabForm").onsubmit = (event) => {
   event.preventDefault();
   const formData = new FormData(document.getElementById("addTabForm"));
-  tabs.push(formData.get("url"));
+  tabs.push({
+    url: formData.get("url"),
+    pinned: formData.get("pinned") === "on",
+  });
   store(tabs);
   refreshTabsList();
   document.getElementById("url").value = "";

@@ -9,14 +9,20 @@
 
     <div>
       <form id="addTabForm">
-        <input id="url" name="url" type="text" />
+        <input id="url" name="url" type="text"/>
         <label for="url">URL</label>
-        <input type="submit" value="Add" />
+        <input id="pinned" name="pinned" type="checkbox"/>
+        <label for="pinned">Pinned?</label>
+        <input type="submit" value="Add"/>
       </form>
     </div>
 
     <div>
-      <ul id="urlList"></ul>
+      <table id="tabsTable"></table>
+      <tr>
+        <th>URL</th>
+        <th>Pinned?</th>
+      </tr>
     </div>
 
     <button id="clearStorage">Clear storage</button>
