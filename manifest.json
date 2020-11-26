@@ -1,0 +1,12 @@
+{
+  "name": "Tabs",
+  "version": "1.0",
+  "description": "...",
+  "manifest_version": 2,
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "storage"
+  ]
+}
