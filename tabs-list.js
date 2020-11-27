@@ -1,5 +1,29 @@
-export const clearTabsList = () =>
-  (document.getElementById("tabsTable").textContent = "");
+const initTable = () => {
+  const table = document.getElementById("tabsTable");
+  const headerRow = generateHeaderRow();
+  table.appendChild(headerRow);
+};
+
+const generateHeaderRow = () => {
+  const tr = document.createElement("tr");
+  const thUrl = document.createElement("th");
+  const thPinned = document.createElement("th");
+  thUrl.innerText = "URL";
+  thPinned.innerText = "Pinned?";
+  tr.appendChild(thUrl);
+  tr.appendChild(thPinned);
+  return tr;
+};
+
+initTable();
+
+export const clearTabsList = () => {
+  const table = document.getElementById("tabsTable");
+  table.textContent = "";
+
+  const headerRow = generateHeaderRow();
+  table.appendChild(headerRow);
+};
 
 export const addTabToList = (tab) => {
   const newTr = document.createElement("tr");
