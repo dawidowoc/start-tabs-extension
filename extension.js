@@ -5,8 +5,8 @@ function Extension() {
   const tabsService = new TabsService();
   const tabsOpenner = new TabsOpenner();
 
-  document.getElementById("openTabs").onclick = function () {
-    tabsOpenner.openTabs(tabsService.getAll());
+  document.getElementById("openTabs").onclick = async function () {
+    tabsOpenner.openTabs(await tabsService.findAll());
   };
 
   document.getElementById("clearStorage").onclick = function () {
@@ -17,7 +17,7 @@ function Extension() {
     event.preventDefault();
     const formData = new FormData(document.getElementById("addTabForm"));
 
-    new tabsService.add({
+    tabsService.add({
       url: formData.get("url"),
       pinned: formData.get("pinned") === "on",
     });

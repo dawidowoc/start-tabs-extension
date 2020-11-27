@@ -2,40 +2,47 @@ import Storage from "./storage.js";
 import TabsList from "./tabs-list.js";
 
 export default function TabsService() {
-  let tabs = [];
-  const storage = new Storage();
-  const tabsList = new TabsList();
+  this.storage = new Storage();
+  this.tabsList = new TabsList();
 
-  storage.load().then((loadedTabs) => {
-    if (!loadedTabs) {
-      return;
+  this.add = async function (tab) {
+    let tabs = await this.storage.findAll();
+
+    if (!tabs) {
+      tabs = [];
     }
 
-    tabs = loadedTabs;
-    refreshTabsList();
-  });
-
-  this.add = function (tab) {
     tabs.push({
       url: tab.url,
       pinned: tab.pinned,
     });
-    storage.store(tabs);
-    refreshTabsList();
+    this.storage.store(tabs);
+    this.refreshTabsList(tabs);
   };
 
   this.clear = function () {
-    storage.clearAll();
-    tabs = [];
-    refreshTabsList();
+    this.storage.clearAll();
+    this.refreshTabsList();
   };
 
-  this.getAll = function () {
-    return tabs;
+  this.findAll = function () {
+    return this.storage.findAll();
   };
 
-  function refreshTabsList() {
-    tabsList.clearTabsList();
-    tabs.forEach((tab) => tabsList.addTabToList(tab));
-  }
+  this.init = function (storage, refreshTabsList) {
+    this.storage.findAll().then((loadedTabs) => {
+      if (!loadedTabs) {
+        return;
+      }
+
+      this.refreshTabsList(loadedTabs);
+    });
+  };
+
+  this.refreshTabsList = function (tabs) {
+    this.tabsList.clearTabsList();
+    tabs.forEach((tab) => this.tabsList.addTabToList(tab));
+  };
+
+  this.init();
 }

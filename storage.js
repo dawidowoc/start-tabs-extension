@@ -8,7 +8,7 @@ export default function Storage() {
     );
   };
 
-  this.load = () => {
+  this.findAll = () => {
     return new Promise((resolve) => {
       chrome.storage.local.get(["tabs"], (result) => resolve(result.tabs));
     });
