@@ -1,37 +1,41 @@
-import { clearAll, load, store } from "./storage.js";
-import { addTabToList, clearTabsList } from "./tabs-list.js";
+import Storage from "./storage.js";
+import TabsList from "./tabs-list.js";
 
-let tabs = [];
+export default function TabsService() {
+  let tabs = [];
+  const storage = new Storage();
+  const tabsList = new TabsList();
 
-export const add = (tab) => {
-  tabs.push({
-    url: tab.url,
-    pinned: tab.pinned,
+  storage.load().then((loadedTabs) => {
+    if (!loadedTabs) {
+      return;
+    }
+
+    tabs = loadedTabs;
+    refreshTabsList();
   });
-  store(tabs);
-  refreshTabsList();
-};
 
-export const clear = () => {
-  clearAll();
-  tabs = [];
-  refreshTabsList();
-};
+  this.add = function (tab) {
+    tabs.push({
+      url: tab.url,
+      pinned: tab.pinned,
+    });
+    storage.store(tabs);
+    refreshTabsList();
+  };
 
-export const getAll = () => {
-  return tabs;
-};
+  this.clear = function () {
+    storage.clearAll();
+    tabs = [];
+    refreshTabsList();
+  };
 
-const refreshTabsList = () => {
-  clearTabsList();
-  tabs.forEach((tab) => addTabToList(tab));
-};
+  this.getAll = function () {
+    return tabs;
+  };
 
-load().then((loadedTabs) => {
-  if (!loadedTabs) {
-    return;
+  function refreshTabsList() {
+    tabsList.clearTabsList();
+    tabs.forEach((tab) => tabsList.addTabToList(tab));
   }
-
-  tabs = loadedTabs;
-  refreshTabsList();
-});
+}
