@@ -1,11 +1,14 @@
 export const openTabs = (tabs) => {
-  tabs.forEach((tab) =>
-    chrome.tabs.create(
-      {
-        url: tab.url,
-        pinned: tab.pinned,
-      },
-      function (tab) {}
-    )
-  );
+  chrome.windows.create({}, (window) => {
+    tabs.forEach((tab) =>
+      chrome.tabs.create(
+        {
+          windowId: window.id,
+          url: tab.url,
+          pinned: tab.pinned,
+        },
+        function (tab) {}
+      )
+    );
+  });
 };
