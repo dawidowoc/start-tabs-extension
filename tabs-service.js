@@ -22,7 +22,7 @@ export default function TabsService() {
 
   this.clear = function () {
     this.storage.clearAll();
-    this.refreshTabsList();
+    this.refreshTabsList([]);
   };
 
   this.findAll = function () {
