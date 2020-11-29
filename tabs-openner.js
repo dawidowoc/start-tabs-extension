@@ -1,5 +1,5 @@
-export default function TabsOpenner() {
-  this.openTabs = (tabs) => {
+export default {
+  openTabs: (tabs) => {
     chrome.windows.create({}, (window) => {
       tabs.forEach((tab) =>
         chrome.tabs.create(
@@ -12,5 +12,5 @@ export default function TabsOpenner() {
         )
       );
     });
-  };
-}
+  },
+};

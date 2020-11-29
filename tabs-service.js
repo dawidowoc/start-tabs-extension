@@ -1,41 +1,58 @@
-import Storage from "./storage.js";
+import Storage from "./storage/storage.js";
 import TabsList from "./tabs-list.js";
 
-export default function TabsService() {
-  let tabs = [];
-  const storage = new Storage();
-  const tabsList = new TabsList();
+export default {
+  add: async function (tab) {
+    let tabs = await Storage.findAll();
 
-  storage.load().then((loadedTabs) => {
-    if (!loadedTabs) {
-      return;
+    if (!tabs) {
+      tabs = [];
     }
 
-    tabs = loadedTabs;
-    refreshTabsList();
-  });
-
-  this.add = function (tab) {
     tabs.push({
       url: tab.url,
       pinned: tab.pinned,
     });
-    storage.store(tabs);
-    refreshTabsList();
-  };
 
-  this.clear = function () {
-    storage.clearAll();
-    tabs = [];
-    refreshTabsList();
-  };
+    const tabsWithId = await Storage.store(tabs);
+    this.refreshTabsList(tabsWithId);
+  },
 
-  this.getAll = function () {
-    return tabs;
-  };
+  findAll: function () {
+    return Storage.findAll();
+  },
 
-  function refreshTabsList() {
-    tabsList.clearTabsList();
-    tabs.forEach((tab) => tabsList.addTabToList(tab));
-  }
-}
+  init: function () {
+    Storage.findAll().then((loadedTabs) => {
+      if (!loadedTabs) {
+        return;
+      }
+
+      this.refreshTabsList(loadedTabs);
+    });
+  },
+
+  refreshTabsList: function (tabs) {
+    TabsList.clearTabsList();
+    tabs.forEach((tab) => TabsList.addTabToList(tab));
+  },
+
+  /**
+   * Remove a tab which has the specified id.
+   * @param id
+   */
+  remove: async function (id) {
+    let tabs = await Storage.findAll();
+
+    const indexOfElement = tabs.indexOf(
+      tabs.find((element) => element.id === id)
+    );
+
+    tabs.splice(indexOfElement, 1);
+
+    await Storage.store(tabs);
+
+    const tabsWithId = await Storage.store(tabs);
+    this.refreshTabsList(tabsWithId);
+  },
+};
