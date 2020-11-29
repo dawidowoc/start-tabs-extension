@@ -38,12 +38,14 @@ export default {
     const pinnedCheckbox = document.createElement("input");
     const removeButton = document.createElement("button");
 
+    pinnedCheckbox.setAttribute("id", "pinned" + tab.id);
     pinnedCheckbox.setAttribute("type", "checkbox");
-    pinnedCheckbox.setAttribute("disabled", "true");
-
     if (tab.pinned) {
       pinnedCheckbox.setAttribute("checked", "true");
     }
+    pinnedCheckbox.onclick = function () {
+      TabsService.pin(tab.id, pinnedCheckbox.checked);
+    };
 
     removeButton.setAttribute("id", "remove" + tab.id);
     removeButton.textContent = "x";

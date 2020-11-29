@@ -56,4 +56,20 @@ export default {
     const tabsWithId = await Storage.store(tabs);
     TabsList.refresh(tabsWithId);
   },
+
+  /**
+   * Set pinned attribute (true or false) of a tab which has the specified id.
+   */
+  pin: async function (id, pinned) {
+    let tabs = await Storage.findAll();
+
+    const indexOfElement = tabs.indexOf(
+      tabs.find((element) => element.id === id)
+    );
+
+    tabs[indexOfElement].pinned = pinned;
+
+    const updatedTabs = await Storage.store(tabs);
+    TabsList.refresh(updatedTabs);
+  },
 };
