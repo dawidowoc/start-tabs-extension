@@ -2,6 +2,9 @@ import Storage from "../storage/storage.js";
 import TabsList from "../view/tabs-list.js";
 
 export default {
+  /**
+   * Add tab.
+   */
   add: async function (tab) {
     let tabs = await Storage.findAll();
 
@@ -15,9 +18,12 @@ export default {
     });
 
     const tabsWithId = await Storage.store(tabs);
-    this.refreshTabsList(tabsWithId);
+    TabsList.refresh(tabsWithId);
   },
 
+  /**
+   * @returns All tabs.
+   */
   findAll: function () {
     return Storage.findAll();
   },
@@ -28,13 +34,8 @@ export default {
         return;
       }
 
-      this.refreshTabsList(loadedTabs);
+      TabsList.refresh(loadedTabs);
     });
-  },
-
-  refreshTabsList: function (tabs) {
-    TabsList.clearTabsList();
-    tabs.forEach((tab) => TabsList.addTabToList(tab));
   },
 
   /**
@@ -53,6 +54,6 @@ export default {
     await Storage.store(tabs);
 
     const tabsWithId = await Storage.store(tabs);
-    this.refreshTabsList(tabsWithId);
+    TabsList.refresh(tabsWithId);
   },
 };

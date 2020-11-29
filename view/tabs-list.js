@@ -12,6 +12,11 @@ export default {
     return tr;
   },
 
+  refresh: function (tabs) {
+    this.clearTabsList();
+    tabs.forEach((tab) => this.addTabToList(tab));
+  },
+
   initTable: function () {
     const table = document.getElementById("tabsTable");
     const headerRow = this.generateHeaderRow();
