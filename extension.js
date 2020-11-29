@@ -19,7 +19,6 @@ import TabsList from "./view/tabs-list.js";
 
     TabsService.add({
       url: formData.get("url"),
-      pinned: formData.get("pinned") === "on",
     });
 
     document.getElementById("url").value = "";

@@ -14,7 +14,7 @@ export default {
 
     tabs.push({
       url: tab.url,
-      pinned: tab.pinned,
+      pinned: false,
     });
 
     const tabsWithId = await Storage.store(tabs);
