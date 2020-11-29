@@ -1,23 +1,24 @@
 import TabsOpenner from "./tabs-openner.js";
 import TabsService from "./tabs-service.js";
+import TabsList from "./tabs-list.js";
 
 function Extension() {
-  const tabsService = new TabsService();
-  const tabsOpenner = new TabsOpenner();
+  TabsList.initTable()
+  TabsService.init();
 
   document.getElementById("openTabs").onclick = async function () {
-    tabsOpenner.openTabs(await tabsService.findAll());
+    TabsOpenner.openTabs(await TabsService.findAll());
   };
 
   document.getElementById("clearStorage").onclick = function () {
-    tabsService.clear();
+    TabsService.clear();
   };
 
   document.getElementById("addTabForm").onsubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(document.getElementById("addTabForm"));
 
-    tabsService.add({
+    TabsService.add({
       url: formData.get("url"),
       pinned: formData.get("pinned") === "on",
     });

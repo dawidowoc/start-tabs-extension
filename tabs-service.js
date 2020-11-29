@@ -1,12 +1,9 @@
-import Storage from "./storage.js";
+import Storage from "./storage/storage.js";
 import TabsList from "./tabs-list.js";
 
-export default function TabsService() {
-  this.storage = new Storage();
-  this.tabsList = new TabsList();
-
-  this.add = async function (tab) {
-    let tabs = await this.storage.findAll();
+export default {
+  add: async function (tab) {
+    let tabs = await Storage.findAll();
 
     if (!tabs) {
       tabs = [];
@@ -16,33 +13,51 @@ export default function TabsService() {
       url: tab.url,
       pinned: tab.pinned,
     });
-    this.storage.store(tabs);
-    this.refreshTabsList(tabs);
-  };
 
-  this.clear = function () {
-    this.storage.clearAll();
+    const tabsWithId = await Storage.store(tabs);
+    this.refreshTabsList(tabsWithId);
+  },
+
+  clear: function () {
+    Storage.clearAll();
     this.refreshTabsList([]);
-  };
+  },
 
-  this.findAll = function () {
-    return this.storage.findAll();
-  };
+  findAll: function () {
+    return Storage.findAll();
+  },
 
-  this.init = function (storage, refreshTabsList) {
-    this.storage.findAll().then((loadedTabs) => {
+  init: function () {
+    Storage.findAll().then((loadedTabs) => {
       if (!loadedTabs) {
         return;
       }
 
       this.refreshTabsList(loadedTabs);
     });
-  };
+  },
 
-  this.refreshTabsList = function (tabs) {
-    this.tabsList.clearTabsList();
-    tabs.forEach((tab) => this.tabsList.addTabToList(tab));
-  };
+  refreshTabsList: function (tabs) {
+    TabsList.clearTabsList();
+    tabs.forEach((tab) => TabsList.addTabToList(tab));
+  },
 
-  this.init();
+  /**
+   * Remove a tab which has the specified id.
+   * @param id
+   */
+  remove: async function (id) {
+    let tabs = await Storage.findAll();
+
+    const indexOfElement = tabs.indexOf(
+      tabs.find((element) => element.id === id)
+    );
+
+    tabs.splice(indexOfElement, 1);
+
+    await Storage.store(tabs);
+
+    const tabsWithId = await Storage.store(tabs);
+    this.refreshTabsList(tabsWithId);
+  },
 }
