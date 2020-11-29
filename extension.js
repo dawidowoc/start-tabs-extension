@@ -3,15 +3,11 @@ import TabsService from "./tabs-service.js";
 import TabsList from "./tabs-list.js";
 
 function Extension() {
-  TabsList.initTable()
+  TabsList.initTable();
   TabsService.init();
 
   document.getElementById("openTabs").onclick = async function () {
     TabsOpenner.openTabs(await TabsService.findAll());
-  };
-
-  document.getElementById("clearStorage").onclick = function () {
-    TabsService.clear();
   };
 
   document.getElementById("addTabForm").onsubmit = (event) => {

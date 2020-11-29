@@ -18,11 +18,6 @@ export default {
     this.refreshTabsList(tabsWithId);
   },
 
-  clear: function () {
-    Storage.clearAll();
-    this.refreshTabsList([]);
-  },
-
   findAll: function () {
     return Storage.findAll();
   },
@@ -60,4 +55,4 @@ export default {
     const tabsWithId = await Storage.store(tabs);
     this.refreshTabsList(tabsWithId);
   },
-}
+};

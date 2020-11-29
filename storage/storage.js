@@ -22,8 +22,4 @@ export default {
       chrome.storage.local.get(["tabs"], (result) => resolve(result.tabs));
     });
   },
-
-  clearAll: function () {
-    chrome.storage.local.clear(() => {});
-  },
 };
