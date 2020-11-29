@@ -1,7 +1,10 @@
-import Storage from "./storage/storage.js";
-import TabsList from "./tabs-list.js";
+import Storage from "../storage/storage.js";
+import TabsList from "../view/tabs-list.js";
 
 export default {
+  /**
+   * Add tab.
+   */
   add: async function (tab) {
     let tabs = await Storage.findAll();
 
@@ -11,13 +14,16 @@ export default {
 
     tabs.push({
       url: tab.url,
-      pinned: tab.pinned,
+      pinned: false,
     });
 
     const tabsWithId = await Storage.store(tabs);
-    this.refreshTabsList(tabsWithId);
+    TabsList.refresh(tabsWithId);
   },
 
+  /**
+   * @returns All tabs.
+   */
   findAll: function () {
     return Storage.findAll();
   },
@@ -28,13 +34,8 @@ export default {
         return;
       }
 
-      this.refreshTabsList(loadedTabs);
+      TabsList.refresh(loadedTabs);
     });
-  },
-
-  refreshTabsList: function (tabs) {
-    TabsList.clearTabsList();
-    tabs.forEach((tab) => TabsList.addTabToList(tab));
   },
 
   /**
@@ -53,6 +54,22 @@ export default {
     await Storage.store(tabs);
 
     const tabsWithId = await Storage.store(tabs);
-    this.refreshTabsList(tabsWithId);
+    TabsList.refresh(tabsWithId);
+  },
+
+  /**
+   * Set pinned attribute (true or false) of a tab which has the specified id.
+   */
+  pin: async function (id, pinned) {
+    let tabs = await Storage.findAll();
+
+    const indexOfElement = tabs.indexOf(
+      tabs.find((element) => element.id === id)
+    );
+
+    tabs[indexOfElement].pinned = pinned;
+
+    const updatedTabs = await Storage.store(tabs);
+    TabsList.refresh(updatedTabs);
   },
 };

@@ -1,4 +1,4 @@
-import TabsService from "./tabs-service.js";
+import TabsService from "../service/tabs-service.js";
 
 export default {
   generateHeaderRow: () => {
@@ -10,6 +10,11 @@ export default {
     tr.appendChild(thUrl);
     tr.appendChild(thPinned);
     return tr;
+  },
+
+  refresh: function (tabs) {
+    this.clearTabsList();
+    tabs.forEach((tab) => this.addTabToList(tab));
   },
 
   initTable: function () {
@@ -33,12 +38,14 @@ export default {
     const pinnedCheckbox = document.createElement("input");
     const removeButton = document.createElement("button");
 
+    pinnedCheckbox.setAttribute("id", "pinned" + tab.id);
     pinnedCheckbox.setAttribute("type", "checkbox");
-    pinnedCheckbox.setAttribute("disabled", "true");
-
     if (tab.pinned) {
       pinnedCheckbox.setAttribute("checked", "true");
     }
+    pinnedCheckbox.onclick = function () {
+      TabsService.pin(tab.id, pinnedCheckbox.checked);
+    };
 
     removeButton.setAttribute("id", "remove" + tab.id);
     removeButton.textContent = "x";

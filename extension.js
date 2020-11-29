@@ -1,8 +1,11 @@
-import TabsOpenner from "./tabs-openner.js";
-import TabsService from "./tabs-service.js";
-import TabsList from "./tabs-list.js";
+import TabsOpenner from "./service/tabs-openner.js";
+import TabsService from "./service/tabs-service.js";
+import TabsList from "./view/tabs-list.js";
 
-function Extension() {
+/**
+ * This is an entry point of the extension.
+ */
+(function Extension() {
   TabsList.initTable();
   TabsService.init();
 
@@ -16,11 +19,8 @@ function Extension() {
 
     TabsService.add({
       url: formData.get("url"),
-      pinned: formData.get("pinned") === "on",
     });
 
     document.getElementById("url").value = "";
   };
-}
-
-Extension();
+})();
