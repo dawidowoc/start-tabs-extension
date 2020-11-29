@@ -1,5 +1,5 @@
-import Storage from "./storage/storage.js";
-import TabsList from "./tabs-list.js";
+import Storage from "../storage/storage.js";
+import TabsList from "../view/tabs-list.js";
 
 export default {
   add: async function (tab) {

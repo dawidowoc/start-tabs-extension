@@ -1,4 +1,4 @@
-import TabsService from "./tabs-service.js";
+import TabsService from "../service/tabs-service.js";
 
 export default {
   generateHeaderRow: () => {
